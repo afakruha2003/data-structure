@@ -8,6 +8,22 @@
         "exception": "cpp",
         "memory": "cpp",
         "tuple": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "atomic": "cpp",
+        "ios": "cpp",
+        "system_error": "cpp",
+        "vector": "cpp",
+        "xiosbase": "cpp",
+        "optional": "cpp",
+        "type_traits": "cpp",
+        "xlocmon": "cpp",
+        "xtr1common": "cpp",
+        "stack": "cpp",
+        "iostream": "cpp",
+        "xlocale": "cpp",
+        "cstring": "cpp",
+        "cstdlib": "cpp",
+        "cctype": "cpp",
+        "queue": "cpp"
     }
 }

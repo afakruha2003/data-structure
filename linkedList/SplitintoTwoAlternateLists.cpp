@@ -1,22 +1,28 @@
 #include <iostream>
 
-class Node {
+class Node
+{
 public:
     int data;
-    Node* next;
-    Node(int data, Node* next = nullptr) : data(data), next(next) {}
+    Node *next;
+    Node(int data, Node *next = nullptr) : data(data), next(next) {}
 };
 
-void alternateSplit(Node* head, Node*& list1, Node*& list2) {
-    Node** tail1 = &list1;
-    Node** tail2 = &list2;
+void alternateSplit(Node *head, Node *&list1, Node *&list2)
+{
+    Node **tail1 = &list1;
+    Node **tail2 = &list2;
     int count = 0;
 
-    while (head != nullptr) {
-        if (count % 2 == 0) {
+    while (head != nullptr)
+    {
+        if (count % 2 == 0)
+        {
             *tail1 = head;
             tail1 = &((*tail1)->next);
-        } else {
+        }
+        else
+        {
             *tail2 = head;
             tail2 = &((*tail2)->next);
         }
@@ -28,24 +34,27 @@ void alternateSplit(Node* head, Node*& list1, Node*& list2) {
     *tail2 = nullptr; // Terminate list2
 }
 
-void display(Node* head) {
-    Node* temp = head;
-    while (temp != nullptr) {
+void display(Node *head)
+{
+    Node *temp = head;
+    while (temp != nullptr)
+    {
         std::cout << temp->data << " -> ";
         temp = temp->next;
     }
     std::cout << "NULL\n";
 }
 
-int main() {
-    Node* head = new Node(10);
+int main()
+{
+    Node *head = new Node(10);
     head->next = new Node(20);
     head->next->next = new Node(30);
     head->next->next->next = new Node(40);
     head->next->next->next->next = new Node(50);
 
-    Node* list1 = nullptr;
-    Node* list2 = nullptr;
+    Node *list1 = nullptr;
+    Node *list2 = nullptr;
 
     std::cout << "Original list:\n";
     display(head);

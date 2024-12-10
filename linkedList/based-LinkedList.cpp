@@ -1,221 +1,394 @@
 #include <iostream>
+using namespace std;
 
 template <typename T>
-class Node {
+class Node
+{
 public:
-    T data;        // The data stored in the node
-    Node* next;    // Pointer to the next node
+    T data;
+    Node *next;
+
+    // Constructor to initialize data and next pointer
+    Node(T d) : data(d), next(nullptr) {}
+
+    // Constructor with a next pointer
+    Node(T d, Node *n) : data(d), next(n) {}
+};
+
+/*  */
+
+template <typename T>
+class LinkedList
+{
+public:
+    Node<T> *head;
 
     // Constructor
-    Node(const T& data = T(), Node* next = nullptr)
-        : data(data), next(next) {}
-};
-
-template <typename T>
-class LinkedList {
-private:
-    Node<T>* head; // Pointer to the first node in the list
-
-public:
-    // Constructor: Initializes an empty list
     LinkedList() : head(nullptr) {}
 
-    // Destructor: Frees all allocated memory
-    ~LinkedList();
+    // Destructor to clear memory
+    ~LinkedList()
+    {
+        clear();
+    }
 
-    // Copy Constructor: Creates a deep copy of another list
-    LinkedList(const LinkedList& other);
+    // Insert at the beginning
+    void insertFirst(T newValue);
 
-    // Assignment Operator: Assigns one list to another
-    LinkedList& operator=(const LinkedList& other);
+    // Insert at the end
+    void insertLast(T value);
 
-    // Insert a node at the head
-    void insertAtHead(const T& value);
+    // Insert after a given node
+    void insertAfter(Node<T> *prevNode, T newValue);
 
-    // Insert a node after a given node
-    void insertAfter(Node<T>* prevNode, const T& value);
-
-    // Delete a node with a specific value
-    void deleteNode(const T& value);
-
-    // Search for a node with a specific value
-    Node<T>* search(const T& value) const;
-
-    // Display all elements in the list
+    // Display the list
     void display() const;
 
-private:
-    // Helper function for deep copying
-    void copyList(const LinkedList& other);
+    // Check if the list is empty
+    bool isEmpty() const;
 
-    // Helper function to clear the list
+    // Check if a value exists in the list
+    void check(T value) const;
+
+    // Delete a node by value
+    void deleteNode(T value);
+
+    // Clear the list (free all nodes)
     void clear();
+
+    // Search for a node by value
+    Node<T> *search(T value) const;
+
+    // Assignment operator (deep copy)
+    LinkedList &operator=(const LinkedList &other);
+
+    // Copy constructor (deep copy)
+    LinkedList(const LinkedList &other);
+
+    // Helper function to deep copy from another list
+    void copyFrom(const LinkedList &other);
 };
 
-// Destructor: Frees all nodes in the list
-template <typename T>
-LinkedList<T>::~LinkedList() {
-    clear();
-}
 
-// Copy Constructor: Creates a deep copy of another list
+// Helper function to deep copy from another list
 template <typename T>
-LinkedList<T>::LinkedList(const LinkedList& other) : head(nullptr) {
-    copyList(other);
-}
-
-// Assignment Operator: Deep copies another list
-template <typename T>
-LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other) {
-    if (this != &other) { // Prevent self-assignment
-        clear();          // Free existing memory
-        copyList(other);  // Copy the other list
+void LinkedList<T>::copyFrom(const LinkedList<T> &other)
+{
+    if (other.head == nullptr)
+    {
+        head = nullptr;
+        return;
     }
-    return *this;
+
+    head = new Node<T>(other.head->data); // Copy the first node
+    Node<T> *current = head;
+    Node<T> *temp = other.head->next;
+
+    while (temp != nullptr)
+    {
+        current->next = new Node<T>(temp->data); // Create new node for each element
+        current = current->next;                 // Move current to the new node
+        temp = temp->next;                       // Move temp to the next node in the original list
+    }
 }
 
-// Insert a node at the head
+// Insert at the beginning
 template <typename T>
-void LinkedList<T>::insertAtHead(const T& value) {
-    Node<T>* newNode = new Node<T>(value, head);
+void LinkedList<T>::insertFirst(T newValue)
+{
+    Node<T> *newNode = new Node<T>(newValue, head);
     head = newNode;
 }
 
-// Insert a node after a given node
+// Insert at the end
 template <typename T>
-void LinkedList<T>::insertAfter(Node<T>* prevNode, const T& value) {
-    if (prevNode == nullptr) return;
+void LinkedList<T>::insertLast(T value)
+{
+    Node<T> *newNode = new Node<T>(value);
+    if (head == nullptr)
+    {
+        head = newNode; // If the list is empty, the new node becomes the head
+        return;
+    }
+    Node<T> *temp = head;
+    while (temp->next != nullptr)
+    {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
 
-    Node<T>* newNode = new Node<T>(value, prevNode->next);
+// Insert after a given node
+template <typename T>
+void LinkedList<T>::insertAfter(Node<T> *prevNode, T newValue)
+{
+    if (prevNode == nullptr)
+    {
+        cout << "The previous node cannot be nullptr." << endl;
+        return;
+    }
+    Node<T> *newNode = new Node<T>(newValue, prevNode->next);
     prevNode->next = newNode;
 }
 
-// Delete a node with a specific value
+// Display the list
 template <typename T>
-void LinkedList<T>::deleteNode(const T& value) {
-    Node<T>* temp = head;
-    Node<T>* prev = nullptr;
+void LinkedList<T>::display() const
+{
+    Node<T> *temp = head;
+    while (temp != nullptr)
+    {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
 
-    while (temp != nullptr && temp->data != value) {
+// Check if the list is empty
+template <typename T>
+bool LinkedList<T>::isEmpty() const
+{
+    return (head == nullptr);
+}
+
+// Check if a value exists in the list
+template <typename T>
+void LinkedList<T>::check(T value) const
+{
+    Node<T> *temp = head;
+    bool found = false;
+    while (temp != nullptr)
+    {
+        if (temp->data == value)
+        {
+            found = true;
+            break;
+        }
+        temp = temp->next;
+    }
+    if (found)
+    {
+        cout << "The value " << value << " exists in the list." << endl;
+    }
+    else
+    {
+        cout << "The value " << value << " does not exist in the list." << endl;
+    }
+}
+
+// Delete a node by value
+template <typename T>
+void LinkedList<T>::deleteNode(T value)
+{
+    Node<T> *temp = head;
+    Node<T> *prev = nullptr;
+
+    while (temp != nullptr && temp->data != value)
+    {
         prev = temp;
         temp = temp->next;
     }
 
-    if (temp == nullptr) return; // Value not found
-
-    if (prev == nullptr) {
-        head = temp->next; // Delete the head
-    } else {
-        prev->next = temp->next; // Bypass the node
+    if (temp == nullptr)
+    {
+        cout << "Value not found in the list." << endl;
+        return; // Value not found
     }
+
+    if (prev == nullptr)
+    { // If the node to be deleted is the head
+        head = temp->next;
+    }
+    else
+    {
+        prev->next = temp->next;
+    }
+
     delete temp; // Free memory
+    cout << "Node with value " << value << " deleted." << endl;
 }
 
-// Search for a node with a specific value
+// Clear the list (free all nodes)
 template <typename T>
-Node<T>* LinkedList<T>::search(const T& value) const {
-    Node<T>* temp = head;
+void LinkedList<T>::clear()
+{
+    while (head != nullptr)
+    {
+        Node<T> *temp = head;
+        head = head->next;
+        delete temp;
+    }
+    cout << "The list has been cleared." << endl;
+}
 
-    while (temp != nullptr) {
-        if (temp->data == value) return temp;
+// Search for a node by value
+template <typename T>
+Node<T> *LinkedList<T>::search(T value) const
+{
+    Node<T> *temp = head;
+    while (temp != nullptr)
+    {
+        if (temp->data == value)
+        {
+            return temp; // Return the found node
+        }
         temp = temp->next;
     }
     return nullptr; // Not found
 }
 
-// Display all elements in the list
+// Assignment operator (deep copy)
 template <typename T>
-void LinkedList<T>::display() const {
-    Node<T>* temp = head;
+LinkedList<T> &LinkedList<T>::operator=(const LinkedList<T> &other)
+{
+    if (this != &other)
+    {            // Prevent self-assignment
+        clear(); // Free the current list
+        Node<T> *temp = other.head;
+        while (temp != nullptr)
+        {
+            insertLast(temp->data); // Insert each element from the other list
+            temp = temp->next;
+        }
+    }
+    return *this;
+}
 
-    while (temp != nullptr) {
-        std::cout << temp->data << " -> ";
+// Copy constructor (deep copy)
+template <typename T>
+LinkedList<T>::LinkedList(const LinkedList<T> &other) : head(nullptr)
+{
+    Node<T> *temp = other.head;
+    while (temp != nullptr)
+    {
+        insertLast(temp->data); // Insert each element from the other list
         temp = temp->next;
     }
-    std::cout << "NULL\n";
 }
 
-// Helper Function: Deep copy another list
-template <typename T>
-void LinkedList<T>::copyList(const LinkedList& other) {
-    if (other.head == nullptr) return;
+int main()
+{
+    LinkedList<int> A;
 
-    head = new Node<T>(other.head->data); // Copy the first node
-    Node<T>* current = head;
-    Node<T>* otherCurrent = other.head->next;
+    // Insert elements into the list
+    A.insertFirst(1);
+    A.insertFirst(2);
+    A.insertLast(4);
 
-    while (otherCurrent != nullptr) {
-        current->next = new Node<T>(otherCurrent->data);
-        current = current->next;
-        otherCurrent = otherCurrent->next;
+    // Display the list
+    cout << "List after insertions: ";
+    A.display(); // Output: 2 1 4
+
+    // Insert after a given node (after the node with value 1)
+    Node<int> *node = A.search(1); // Search for node with value 1
+    if (node != nullptr)
+    {
+        A.insertAfter(node, 3); // Insert 3 after node with value 1
     }
-}
 
-// Helper Function: Clear the list
-template <typename T>
-void LinkedList<T>::clear() {
-    while (head != nullptr) {
-        Node<T>* temp = head;
-        head = head->next;
-        delete temp;
-    }
-}
+    // Display the list after insertion
+    cout << "List after inserting 3 after 1: ";
+    A.display(); // Output: 2 1 3 4
 
-int main() {
-    LinkedList<int> list;
-
-    // Insert elements at the head
-    list.insertAtHead(10);
-    list.insertAtHead(20);
-    list.insertAtHead(30);
-
-    std::cout << "List after inserting at the head:\n";
-    list.display(); // Output: 30 -> 20 -> 10 -> NULL
-
-    // Insert after a node
-    Node<int>* headNode = list.search(30);
-    list.insertAfter(headNode, 25);
-
-    std::cout << "List after inserting 25 after 30:\n";
-    list.display(); // Output: 30 -> 25 -> 20 -> 10 -> NULL
+    // Check for a value in the list
+    A.check(2); // Output: The value 2 exists in the list.
+    A.check(3); // Output: The value 3 exists in the list.
 
     // Delete a node
-    list.deleteNode(20);
-    std::cout << "List after deleting 20:\n";
-    list.display(); // Output: 30 -> 25 -> 10 -> NULL
+    A.deleteNode(1); // Output: Node with value 1 deleted.
+    A.display();     // Output: 2 3 4
 
-    // Search for a node
-    Node<int>* foundNode = list.search(10);
-    if (foundNode != nullptr) {
-        std::cout << "Node with value 10 found.\n";
-    } else {
-        std::cout << "Node with value 10 not found.\n";
-    }
+    // Clear the list
+    A.clear();   // Output: The list has been cleared.
+    A.display(); // Output: (empty list)
 
     // Copy the list
-    LinkedList<int> copiedList = list;
-    std::cout << "Copied list:\n";
-    copiedList.display();
+    LinkedList<int> B;
+    B.insertFirst(10);
+    B.insertFirst(20);
+    cout << "List B: ";
+    B.display(); // Output: 20 10
+
+    // Using assignment operator
+    A = B;
+    cout << "List A (after assignment): ";
+    A.display(); // Output: 20 10
 
     return 0;
 }
 
-
-/*Features in This Code
-Node Class: Defines a generic node with data and a pointer.
-Insertions:
-insertAtHead: Adds a new node at the beginning.
-insertAfter: Adds a new node after a given node.
-Deletion: Removes a node by value.
-Search: Finds a node by value.
-Display: Prints the list.
-Copy Constructor: Creates a deep copy of another list.
-Assignment Operator: Handles list assignments.
-Destructor: Cleans up memory to prevent leaks. */
+/* LAYAN CODE WİTHOUT TEMPLATE
 
 
+#include <iostream>
+using namespace std;
+
+class Node{
+    public:
+    Node(int d){
+        data=d;
+        next=NULL;
+
+    }
+     Node(int d, Node * n){
+        data=d;
+        next=n;
+
+    }
+    int data;
+    Node* next;
+};
+
+class List{
+    public:
+  Node* head= NULL;
+  void insertfirst(int newvalue){
+      Node*newnode= new Node(newvalue,head);
+      head=newnode;
+  }
+  void insertlast(int value){
+      Node* newnode=new Node(value);
+      Node* temp=head;
+      while(temp->next!=NULL){
+              temp=temp->next;}
+          temp->next=newnode;
+
+  }
+  void display(){
+      Node* temp=head;
+      while(temp!=NULL){
+          cout<<temp->data;
+          temp=temp->next;
+      }
+
+  }
+  bool isempty(){
+      return(head==NULL);
+  }
+  void Cheak(int value){
+     Node* temp=head;
+     while(temp!=NULL){
+        if(temp->data==value)
+        cout<<"the value exixt";
+
+        temp=temp->next;
 
 
 
+     }
+  }
+};
 
+int main() {
 
+    std::cout << "Try programiz.pro "<<endl;
+    List A;
+    A.insertfirst(1);
+    A.insertfirst(2);
+    A.insertlast(4);
+    A.display();
+    A.Cheak(2);
+
+    return 0;
+}
+*/
