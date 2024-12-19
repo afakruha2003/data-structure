@@ -24,6 +24,7 @@
         "cstring": "cpp",
         "cstdlib": "cpp",
         "cctype": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "random": "cpp"
     }
 }

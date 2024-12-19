@@ -6,13 +6,13 @@ Maximum height for N Nodes: N-1
 Minimum height: [log(N+1)-1]
                     2
 */
-// Define the structure for a binary tree node
+
 struct TreeNode {
     int value;
     TreeNode* left;
     TreeNode* right;
 
-    // Constructor to initialize a new node
+    
     TreeNode(int val) : value(val), left(nullptr), right(nullptr) {}
 };
 

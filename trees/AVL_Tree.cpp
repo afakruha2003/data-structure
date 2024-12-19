@@ -2,7 +2,7 @@
 /*AVL Tree:
 An AVL tree is a self-balancing binary search tree. The main property of the AVL tree is that the difference in heights between the left and right subtrees of any node (called the balance factor) is at most 1. If the balance factor becomes greater than 1 or less than -1 after an insertion or deletion, the tree is rebalanced using rotations (left or right).
 
-Why AVL?
+Why AVL(Adelson-Velsky and Landis)?
 The AVL tree was the first self-balancing binary search tree and is an important data structure in computer science, especially for applications where fast search, insert, and delete operations are needed.*/
 /*
 Approach:
@@ -19,6 +19,8 @@ Deletion: After deletion, re-balance the tree by checking balance factors and pe
 #include <iostream>
 #include <algorithm>
 using namespace std;
+
+//AVL,Balanced tree ,complete tree,full tree,deletion functions,
 
 // AVL Tree Node
 struct TreeNode {

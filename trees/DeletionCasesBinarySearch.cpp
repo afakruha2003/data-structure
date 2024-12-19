@@ -77,6 +77,7 @@ TreeNode* deleteNodeWithOneChild(TreeNode* root, int value) {
 }
 
 // Case 3: Deleting a node with two children
+// Function to delete a node with two children from a binary search tree
 TreeNode* deleteNodeWithTwoChildren(TreeNode* root, int value) {
     if (root == nullptr) return root;
 
@@ -88,14 +89,19 @@ TreeNode* deleteNodeWithTwoChildren(TreeNode* root, int value) {
     } else {
         // Node found with two children
         if (root->left != nullptr && root->right != nullptr) {
-            // Get the inorder successor (smallest node in the right subtree)
-            TreeNode* temp = findMin(root->right);
-            root->data = temp->data; // Replace the node's value with the inorder successor
-            root->right = deleteNodeWithTwoChildren(root->right, temp->data); // Delete the inorder successor
+            // Find the inorder successor (smallest node in the right subtree)
+            TreeNode* successor = findMin(root->right);
+
+            // Replace the node's data with the inorder successor's data
+            root->data = successor->data;
+
+            // Delete the inorder successor from the right subtree
+            root->right = deleteNodeWithTwoChildren(root->right, successor->data);
         }
     }
     return root;
 }
+
 
 // Inorder Traversal to print the tree (for testing purposes)
 void inorder(TreeNode* root) {

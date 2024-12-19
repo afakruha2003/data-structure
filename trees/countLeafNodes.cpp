@@ -2,30 +2,50 @@
 using namespace std;
 
 // Define the structure for a general tree node
-struct TreeNode {
+struct TreeNode
+{
     int value;
-    TreeNode* firstChild;  // Pointer to the first child
-    TreeNode* nextSibling; // Pointer to the next sibling
+    TreeNode *firstChild;  // Pointer to the first child
+    TreeNode *nextSibling; // Pointer to the next sibling
 
     // Constructor to initialize a new node
     TreeNode(int val) : value(val), firstChild(nullptr), nextSibling(nullptr) {}
 };
 
 // Function to count the number of leaf nodes in the tree
-int countLeafNodes(TreeNode* root) {
-    if (root == nullptr) 
+int countLeafNodes(TreeNode *root)
+{
+    if (root == nullptr)
         return 0;
 
     // If a node has no children, it is a leaf node
-    if (root->firstChild == nullptr) 
+    if (root->firstChild == nullptr)
         return 1;
 
     // Recursively count the leaf nodes in the first child and next siblings
     return countLeafNodes(root->firstChild) + countLeafNodes(root->nextSibling);
 }
+void displayLeaves(TreeNode *root)
+{
+    // Base case: if the node is null, return
+    if (root == nullptr)
+        return;
+
+    // Check if the current node is a leaf node
+    if (root->firstChild == nullptr && root->nextSibling == nullptr)
+    {
+        cout << root->value << " ";
+        return;
+    }
+
+    // Recursively call the function for left and right subtrees
+    displayLeaves(root->firstChild);
+    displayLeaves(root->nextSibling);
+}
 
 // Example usage
-int main() {
+int main()
+{
     // Create a sample tree:
     //        1
     //      / | \
@@ -33,7 +53,7 @@ int main() {
     //    / \
     //   5   6
 
-    TreeNode* root = new TreeNode(1);
+    TreeNode *root = new TreeNode(1);
     root->firstChild = new TreeNode(2);
     root->firstChild->nextSibling = new TreeNode(3);
     root->firstChild->nextSibling->nextSibling = new TreeNode(4);
@@ -41,6 +61,6 @@ int main() {
     root->firstChild->firstChild->nextSibling = new TreeNode(6);
 
     cout << "Number of leaf nodes: " << countLeafNodes(root) << endl;
-
+    displayLeaves(root);
     return 0;
 }
